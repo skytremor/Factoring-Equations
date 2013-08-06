@@ -1,15 +1,16 @@
 from fractions import Fraction
 from decimal import Decimal
-import struct, socket, time, math, array, re, sys, os
+import struct, math, sys, os
 
 a = int(raw_input("Enter the value for A:"))
 b = int(raw_input("Enter the value for B:"))
 c = int(raw_input("Enter the value for C:"))
 
+#Check 1----------------------------------------------
 if int(a) == 0 :
     print "The value of A cannot be 0."
     
-#Check 1----------------------------------------------
+#Check 2----------------------------------------------
 def discriminant(a,b,c):
     try:
        math.sqrt(b*b-4*a*c)
@@ -59,7 +60,7 @@ def display(x1, x2) :
 display(x1, x2)
 
 ##End of program---------------------------------------------------------------------------
-##Check 1----------------------------------------------Not really neccesary, at this moment
+##Check 3----------------------------------------------Not really neccesary, at this moment
 ##def rationalization(a,b,c):
 ##    x = math.sqrt(b*b-4*a*c)
 ##    if float(x) != int(x):
