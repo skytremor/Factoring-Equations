@@ -1,0 +1,284 @@
+#include <iostream>
+#include <cmath>
+#include <windows.h>
+
+using namespace std;
+
+struct frac
+{
+    int nume;
+    int deno;
+};
+
+//Declared Functions
+int rationalization(int,int,int);
+int discriminant(int,int,int);
+double cuadratic(int,int,int,bool);
+double cuadratic2(int,int,int,bool);
+void Display(double,double);
+void Display2(double,double);
+void centerstring(char* string);
+void centerstring2();
+int GCF(int,int);
+frac SimpF(frac);
+frac X1, X2;
+int num[3] = {67,65,82};
+
+//Title Variables
+char title[] = "Factoring Trinomials";
+char equation[] = "ax^2 + bx + c";
+char discriminantdisplay[] = "  This equation cannot factor. \n";
+char rationalizationdisplay[] = " This equation cannot be factored. \n\n\n It is mathematically possible to factor this equation, but because of the\n simplicity of this program, it has been coded to display this message for the\n convenience of the user.\n\n ";
+char nofactor[] = " This equation cannot factor.  \n ";
+char anozero[] = " 'A' cannot equal '0'. \n\n";
+//Main function------------------------------------------
+int main()
+{
+    int a, b, c, i, num1;
+    double x1,x2;
+    char option = 'Y';//loop condition variables
+    char bruteresult; 
+    do{
+        //title & variable inputs
+        system("cls");
+        centerstring(title);
+		cout << "\n";
+		centerstring(equation);
+        cout << "\nEnter a, b and c:" << endl;
+        cout << "A = "; cin >> a;
+        cout << "B = "; cin >> b;
+        cout << "C = "; cin >> c;
+        cout << endl;
+        
+        if (a == 0)
+        {
+              centerstring(anozero);
+              system("pause");
+              exit(0);
+        }
+        //Check1,2
+        if((discriminant(a,b,c) == false && rationalization(a,b,c) == false) || (discriminant(a,b,c) == false && rationalization(a,b,c) == true))
+        {
+                           centerstring(nofactor);
+                           cout << endl << "Do you wish to factor another equation? Press 'Y' continue. ";
+                           cin >> option;
+                           centerstring2();
+                           continue;
+        }
+        if(discriminant(a,b,c) == true && rationalization(a,b,c) == false)
+        {
+                           centerstring(rationalizationdisplay);
+                           cout << "Do you still wish to see the result? Press 'Y' if so. ";
+                           cin >> bruteresult;
+                           if(bruteresult == 'Y')
+                           {
+                                          x1 = cuadratic2(a,b,c,true);
+                                          x2 = cuadratic2(a,b,c,false);
+                                          Display2(x1,x2);
+                           }
+                           cout << endl << " Do you wish to factor another equation? Press 'Y' continue. ";
+                           cin >> option;
+                           centerstring2();
+                           continue;
+        }                                                                
+        
+        //result display
+        x1 = cuadratic(a,b,c,true);
+        x2 = cuadratic(a,b,c,false);
+        Display(x1,x2);
+        cout << "x1 : " << x1 << " x2 : " << x2 << endl;
+        
+        //Loop input and display
+        cout << endl << "Do you wish to factor another equation? Press 'Y' continue. "; 
+        cin >> option;
+        centerstring2();       
+    }while(option == 'Y');
+       
+    return 0;              
+}
+
+//Check 1----------------------------------------------
+int rationalization(int a,int b,int c)
+{
+    double x;
+    x = sqrt(b*b-4*a*c);
+    if(x != (int)x)
+    {
+                       return false;
+    }else{
+                       return true;
+    }      
+}
+         
+//Check 2----------------------------------------------
+int discriminant(int a,int b,int c)
+{
+    if(b*b-4*a*c >= 0)
+    {
+    return true;
+    }else{
+    return false;
+    }
+}
+
+//Fraction GCF------------------------------------------
+int GCF(int a, int b)
+{
+    if (b == 0)
+    {
+          return a;
+    } else {
+          return GCF(b, (a%b));
+    }
+}
+
+//Fraction Simplifier-----------------------------------
+frac SimplF (frac a)
+{
+     frac c;
+         
+     c.nume = (a.nume / GCF (a.nume, a.deno));
+     c.deno = (a.deno / GCF (a.nume, a.deno));
+     cout << "nume : " << a.nume << "deno : " << a.deno << endl;
+     if (c.deno < 0)
+     {
+         c.nume *= -1; c.deno *= -1;
+     }
+    
+    return c;
+}
+
+//Calculation result using the cuadratic formula----------------
+double cuadratic(int a, int b, int c,bool sign)
+{
+    if(sign == true)
+    {
+        X1.nume = ((-1 * b) + sqrt(b*b - 4*a*c));
+        X1.deno = (2*a);
+        X1 = SimplF(X1);
+        return (((-1 * b) + sqrt(b*b-4*a*c)) / (2*a));
+    }else{
+        X2.nume = ((-1 * b) - sqrt(b*b - 4*a*c));
+        X2.deno = (2*a);
+        X2 = SimplF(X2);
+        return (((-1 * b) - sqrt(b*b - 4*a*c)) / (2*a));
+    }
+}
+
+double cuadratic2(int a, int b, int c, bool sign)//bruteforcing result
+{
+    double x1, x2;   
+    if(sign == true)
+    {  
+        x1 = (-b+sqrt((b*b)-(4*a*c)))/(2*a);
+        return x1;
+    }else{ 
+        x2 = (-b-sqrt((b*b)-(4*a*c)))/(2*a);
+        return x2;
+    }
+}
+
+void Display2(double x1, double x2)//bruteforcing result
+{
+     int a, b, c;
+     x1 *= -1;
+     x2 *= -1;
+     
+     cout << "\n The factorization is: ";
+     cout << "\n (x";
+
+    if(x1 < 0)
+    {
+                x1 = x1*-1;
+				cout << " + " << x1;
+    }else{
+				cout << " - " << x1; 
+    }
+			cout << ")(x";	
+	if (x2 < 0)
+	{
+                x2 = x2*-1;
+                cout << " + " << x2;
+	}else{
+				cout << " - " << x2;
+    }		
+			cout << ")" << endl; 
+     return;
+}
+     
+
+//Visual Result Display------------------------------------------------
+void Display(double x1,double x2)
+{
+     int a, b, c;
+     
+     x1 *= -1; 
+     x2 *= -1; 
+     X1.nume *= -1; 
+     X2.nume *= -1;
+            
+        cout << "The factorization is: ";
+        if (X1.deno != 1)
+        {
+                    cout << "(" << X1.deno << "x ";
+        }else{
+                    cout << "(x ";
+        }
+        
+        if (X1.nume < 0)
+        {
+                    X1.nume *= -1;
+                    cout << "- ";
+        }else{
+                    cout << "+ ";
+        }
+        cout << X1.nume << ")";
+        
+        if (X2.deno != 1)
+        {
+                    cout << "(" << X2.deno << "x ";
+        }else{
+                    cout << "(x ";
+        }
+        
+        if (X2.nume < 0)
+        {
+                    X2.nume *= -1;
+                    cout << "- ";
+        }else{
+                    cout << "+ ";
+        }
+        
+        cout << X2.nume << ")";
+        cout << endl;
+        //int i;
+        //char num1 = num[i];
+     return;
+}
+
+//Title Display------------------------------------------
+void centerstring(char* string)
+{
+  int l = strlen(string);
+  int pos = (int)((80 - l) / 2);
+  
+      for (int i = 0; i < pos; i++)
+      {
+              cout << " ";
+      }
+      cout << string;
+  
+  return;
+}
+
+void centerstring2()
+{
+     ::Sleep(1000);
+     for (int i=0; i < 3; ++i)
+     {
+         char num1 = num[i];
+         cout << num1;
+     }
+     ::Sleep(90);
+     return;
+}
